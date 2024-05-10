@@ -1,0 +1,258 @@
+---
+title: "DataToolBox Package"
+author: "Zhengyi Zhao <122090791@link.cuhk.edu.cn>, 
+    Shengkai Jiao <122090227@link.cuhk.edu.cn>, 
+    Sicheng Wan <122090510@link.cuhk.edu.cn>"
+output: rmarkdown::html_vignette
+date: "2024-05-08"
+vignette: >
+  %\VignetteIndexEntry{DataToolBox Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+### A comprehensive R package for data processing, visualization, variable selection with corresponding regression and vectorized hypothesis test
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+**DataToolBox** is package helps to conduct data visualization, data cleaning, outliers handling and distribution checking on the data set. It also helps to select regressor variables based on forward or backward methods and provides the regression result with corresponding response variable and selected regressor. Besides, it provide some vectorized hypothesis such as t test and so on for you to check. What's more, this package also has functions to get contingency table and sample size needed to achieve a desired error in estimating a population proportion with a specified confidence level.
+
+## Package installation
+To install **DataToolBox** package, you can use the `install.packages()` function in R. However, since the package is in tar.gz file format, you will need to specify the path to the file using the `repos=NULL` argument. Here is an example of how to install it:
+```{r}
+install.packages("/path/to/DataToolBox_0.9.0.tar.gz", repos = NULL, type = "source")
+```
+
+## Load Package 
+To use **DataToolBox** you first need to load in library into your R session using the library() function. Here's an example:
+```{r}
+library(DataToolBox)
+```
+
+## Load sample data set
+The following sample data set includes socio-economic information with suicide rates by country in 2011.
+```{r}
+data("SuicideData")
+head(SuicideData,100)
+```
+
+
+## 1. Key Features of Numeric Column Visualization
+The function `plot_data_analysis` in **DataToolBox** package is designed to provide a comprehensive visualization of numeric columns within a dataset. It facilitates both univariate and bivariate analysis by generating histograms for each numeric column and pairwise plots for exploring relationships between them. The function is flexible, allowing customization of plot colors and the option to toggle the display of histograms or pair plots based on the user's needs.
+Here is an example of using `plot_data_analysis`:
+```{r, eval = FALSE}
+plot_data_analysis(SuicideData, hist = TRUE, pair = TRUE, hist_col = "lightblue", pair_col = "darkgreen")
+```
+
+## 2. Check Distribution
+After seeing the plot of each column. We may want to know whether it follows some specific distribution. We can use `check_distribution` function to solve it. Here is some examples:
+
+```{r}
+check_distribution(SuicideData$HDI.for.year, "uniform")
+check_distribution(SuicideData$gdp_per_capita...., "exponential")
+check_distribution(SuicideData$suicides.100k.pop, "normal")
+```
+
+
+## 3. Data Cleaning
+Before proceeding with further operations on the provided data set, it's essential to perform data cleaning to ensure its integrity and quality. The package offers a comprehensive set of functions for data cleaning, allowing users to remove or rectify potentially erroneous data.
+
+### Introduction to Data Cleaning
+Data cleaning is a crucial step in the data pre-processing pipeline, involving the identification and handling of missing, duplicate, or inconsistent data points. By addressing these issues, we can improve the accuracy and reliability of subsequent analyses and modeling tasks.
+
+### The data_cleaning Function
+The data_cleaning function is designed to streamline the data cleaning process. It offers several operations to handle common data quality issues effectively.
+
+### Available Operations
+remove_missing: By setting `remove_missing = TRUE`, the function will remove rows containing missing (NA) values from the data set. This ensures that analyses are performed on complete data, reducing the risk of biased results.
+
+remove_repeating: Setting `remove_repeating = TRUE` instructs the function to eliminate duplicate rows from the data set. This operation helps maintain data integrity by removing redundant observations.
+
+fill_NA: When `fill_NA = TRUE`, the function replaces NA values in a column with the mean value of that column from the data set. This imputation strategy helps preserve the overall distribution of the data while addressing missing values.
+
+get_dummies: Setting `get_dummies = TRUE` enables the creation of dummy variables in the data set. Dummy variables are binary indicators representing categorical variables, facilitating the inclusion of categorical data in statistical analyses.
+
+Example Usage
+
+```{r}
+clean_SuicideData <- data_cleaning(SuicideData, TRUE, TRUE)
+```
+
+In this example, we apply all available data cleaning operations to `SuicideData`, and the cleaned data is stored as `clean_SuicideData`.
+
+
+## 4. Outliers Handling
+After performing preliminary data cleaning, you can utilize the outliers_handling function from this package to identify and manage outliers within your data set according to your specified criteria. This function equips users with a set of functionalities tailored to outlier detection and treatment:
+
+### Key Features
+**Outlier Detection and Removal**: By inputting the dataset and specifying the desired threshold for outlier filtering, the function identifies and eliminates outliers, providing a refined data set that is more suitable for subsequent analyses. This ensures that statistical analyses and modeling are conducted on data free from the influence of outliers, thereby improving the accuracy and reliability of results.
+
+**Visualization of Original Data**: The function generates a line plot illustrating the original data distribution before outlier processing. This visualization allows users to gain insights into the distribution and variability of the data, serving as a reference point for understanding the impact of outliers on the data set.
+
+**Comparison Visualization**: Additionally, the function produces a line plot showcasing the data after outlier processing. This visual representation enables users to compare the distribution and patterns of the data before and after outlier removal, facilitating the assessment of the effectiveness of the outlier handling procedure.
+
+Example Usage
+
+```{r, eval=FALSE}
+clean_SuicideData <- Outliers_handling(SuicideData, threshold = 0.5, "suicides_no")
+```
+
+## 5. Forward and Backward Variable selection 
+This can help you to get the most n influential variables corresponding to your response variable.
+
+In this example step, suppose we are interested in the number of suicides people in 100000 people. We want to focus on the 4 most important regressor variables and want to see the regression result. We do variables selection based on forward method first by forward_selection_regression() function.
+```{r}
+forward_selection_regression(clean_SuicideData, "suicides.100k.pop", 4, summary = TRUE)
+```
+
+We may also want to focus on the 4 most important regressor variables and want to see the regression result  based on backward method. We can do this by backward_selection_regression() function instead of forward_selection_regression()
+
+```{r}
+backward_selection_regression(clean_SuicideData, "suicides.100k.pop", 4, summary = TRUE)
+```
+
+## 6. Hypothesis Testing Tools
+The `calculate_contingency_table` function is a robust tool for performing a chi-square test of independence from a contingency table, which is crucial in understanding the relationship between two categorical variables. 
+
+When given a matrix of observed counts where each element represents the count of observations for a combination of categories from two variables, this function calculates the chi-square statistic, degrees of freedom, and p-value. This aids in determining whether there is a significant association between the two variables. By setting a significance level (`alpha`), users can customize the rigor of the hypothesis test, making it a flexible tool for various research contexts. 
+
+For example, if a marketer wants to determine whether there is an association between gender (male/female) and number of suicides, this function can provide a clear statistical answer.
+Here is an example of using `calculate_contingency_table`:
+
+```{r}
+library(dplyr)
+library(tidyr)
+SuicideData_Arg = SuicideData %>%
+  filter(country == "Argentina")
+SuicideData_Arg = SuicideData_Arg %>%
+  select(sex, age, suicides_no) %>%
+  spread(age, suicides_no)
+
+SuicideData_Arg_mat <- as.matrix(SuicideData_Arg)
+SuicideData_Arg_mat = SuicideData_Arg_mat[, -1]
+SuicideData_Arg_mat = matrix(as.numeric(SuicideData_Arg_mat), nrow = nrow(SuicideData_Arg_mat))
+rownames(SuicideData_Arg_mat) = c("female", "male")
+colnames(SuicideData_Arg_mat) = c("15-24 years", "25-34 years", "35-54 years",
+                                 "5-14 years", "55-74 years", "75+ years")
+
+#Assume that H0: The age of suicides_no in Argentina has no difference from man to women.
+calculate_contingency_table(SuicideData_Arg_mat, alpha = 0.05)
+```
+
+The `calculate_sample_size` function addresses a common challenge in statistics: determining the necessary sample size to estimate a population proportion within a desired error margin at a specified confidence level. 
+
+By inputting an estimated proportion (`p_hat`), the maximum margin of error (`desired_error`), and the confidence level, the function computes the minimum number of samples needed. This is particularly valuable in planning studies or surveys where precision in proportion estimates is crucial. 
+
+For instance, a public health official could use this function to determine how many individuals should be surveyed to estimate the prevalence of a health behavior within a 5% error margin with 95% confidence.
+Here is an example of `calculate_sample_size`: 
+```{r}
+#Suppose you want to estimate the proportion of suicides in a specific demographic group (e.g., females aged 15-24) within a certain country. You would first need to calculate an initial estimate of the proportion of suicides in this group (p_hat), which could be based on previous data or preliminary analysis.
+
+SuicideData_Arg = SuicideData %>%
+  filter(country == "Argentina")
+p_hat = sum(SuicideData_Arg$sex == "female" & SuicideData_Arg$age == "15-24 years")/sum(SuicideData_Arg$sex == "female")
+calculate_sample_size(p_hat, desired_error = 0.05, confidence_level = 0.95) # Should be 214
+
+#So we can know that at least 214 individuals should be surveyed to estimated within a 5% error margin with 95% confidence.
+```
+
+The `vectorization_test` function is designed for efficient comparative statistical testing across corresponding columns of two data frames using either t-tests or chi-square tests. This vectorized approach allows users to automatically apply the specified test to each pair of columns from the first and second data frame, respectively. 
+
+The results include the test statistic, degrees of freedom, and p-value for each test performed, providing a comprehensive overview of the statistical differences or associations across multiple variables. 
+
+This function is ideal for scenarios where researchers or analysts need to conduct multiple comparisons quickly, such as comparing pre-test and post-test data across several groups or variables in a clinical trial.
+
+Here is an example of `vectorization_test`:
+```{r}
+SuicideData_Arg = SuicideData %>%
+  filter(country == "Argentina")
+SuicideData_Arm = SuicideData %>%
+  filter(country == "Armenia")
+
+vectorization_t_test(SuicideData_Arg, SuicideData_Arm)
+
+#The results implies that 
+#suicides_no:
+#The t-test statistic is 3.611882.
+#With 11.01792 degrees of freedom, this yields a p-value of 0.004073629.
+#The p-value is less than 0.05, suggesting that there is a statistically significant difference in the number of suicides between the two datasets.
+#population:
+#  The t-test statistic is 8.46542.
+#With 11.15149 degrees of freedom, the p-value is very small (3.465129e-06).
+#This extremely low p-value indicates a highly significant difference in population between the two datasets.
+#suicides.100k.pop:
+#  The t-test statistic is 2.356893.
+#With 13.02052 degrees of freedom, the p-value is 0.03474843.
+#The p-value is less than 0.05, indicating a statistically significant difference in suicide rates per 100k population between the datasets.
+```
+
+## The following are the learned points from this course. 
+
+### 1. Apply Family
+
+R offers a family of apply functions, which allows us to apply a function across different chunks of data. The apply function helps to increase the speed, save the memory, and also make the code more readable.
+
+In this project, we use several apply family, such as:
+
+    apply(): Returns a vector or array or list of values obtained by applying a function to margins of an array or matrix.
+
+    sapply(): A user-friendly version and wrapper of lapply, which returns a list of the same length as X, each element of which is the result of applying FUN to the corresponding element of X.
+
+Example of implementation in this package:
+
+In `calculate_contingency_table` function, we use `apply()` to calculate the row sum and column sum of the contingency table by apply the `sum()` function to the data `observed` and set the margin to be 1 as row and 2 as column. 
+
+And in `vectorization_t_test` function, we use `sapply()` to pick up the numeric columns of a data frame, where we apply the `is.numeric()` function on the data frame.
+
+### 2. Basic Plotting
+
+R provides a simple yet powerful set of functions for creating various types of plots directly from your data. 
+
+In this project, we use the basic plotting functions including:
+
+    hist(): Computes a histogram of the given data values.
+
+    par(): Used to set or query graphical parameters.
+
+    pairs(): Produce a matrix of scatterplots.
+
+Example of implementation in this package:
+
+In `plot_data_analysis` function, we use `hist()` to plot the histograms of all numeric columns to generally go through the given data set. Then use the `par()` function to set the appropriate layout. And finally use the `pairs()` to plot a lot of scatter plots to find whether there is a relationship between two variables.
+
+### 3. Logical Expression
+Logical expressions help the program to decide whether to execute a command.
+Example of implementation in this package:
+In `Data_cleaning`, the user is required to input TRUE or FALSE to decide whether to remove missing values, remove repeated values, fill the NA values or create dummies for the given data.
+
+### 4. List
+List can help the store information and allows easy access to the data.
+Example of implementation in this package:
+In `Outliers_handling`, a list is used when dealing with the plotting of the original or processed data. As there are more than one columns needed to be plotted, a list can easily store these graphs.
+
+### 5. ggplot2
+`ggplot2` provides an intuitive and consistent syntax, making it effortless to create beautiful plots. It supports multiple types of plots, including scatter plots, histograms, box plots, etc., enabling to showcase different characteristics of data.
+Example of implementation in this package:
+In `Outliers_handling`, `ggplot2` is used to plot the data before the outliers handling procedure, and is used again to plot the processed data. In this function, `ggplot2` is used to draw scatter plots.
+
+### 6. Iteration
+Iterations in programming are repetitive executions of a block of code until a specific condition is met or a certain number of repetitions is reached. It plays a crucial role in automating tasks, especially when dealing with datasets.
+Example of implementation in this package:
+In `forward_selection_regression` and `backward_selection_regression`, in order to get the most n (expected number of regressors) influential variables corresponding to the response variable, iteration `for` and `while` are used to go through each column repeatedly and select variables.  
+
+### 7. Control flow (if, else, etc)
+By using control flow, we can decide program whether or not to execute some commands.
+Example of implementation in this package:
+In `check_distribution`, control flows `if` and `else` are used to enable users to choose distribution that they want to check.
+Also, in `forward_selection_regression` and `backward_selection_regression`, control flows `if` are used to stop continuing executing following codes and to warn users when the input has some problems.
+
+### 8. Fitting Models to Data(lm) and Utility functions
+The fitting of models to data serves the purpose of establishing relationships between variables in a dataset. And utility functions enable users to gain insights, make predictions, and assess model performance effectively.
+Example of implementation in this package:
+In `forward_selection_regression` and `backward_selection_regression`, `lm` was used to fitting models to data and `summary` shows the basic and important information of the fitted model.
+
+### 9. Indexing
+There are 3 ways to index a vector, matrix, data frame, or list in R. In this project, we use the indexing using explicit integer indices (or negative integers).
+Example of implementation in this package:
+In `forward_selection_regression` and `backward_selection_regression`, we use negative index to exclude the regressors have been selected from the regressor candidates set.

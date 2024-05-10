@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Zhengyi Zhao 122090791@link.cuhk.edu.cn, Shengkai Jiao 122090227@link.cuhk.edu.cn, Sicheng Wan 122090510@link.cuhk.edu.cn" />
+
+<meta name="date" content="2024-05-08" />
+
+<title>DataToolBox Package</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">DataToolBox Package</h1>
+<h4 class="author">Zhengyi Zhao <a href="mailto:122090791@link.cuhk.edu.cn" class="email">122090791@link.cuhk.edu.cn</a>, Shengkai Jiao <a href="mailto:122090227@link.cuhk.edu.cn" class="email">122090227@link.cuhk.edu.cn</a>, Sicheng Wan <a href="mailto:122090510@link.cuhk.edu.cn" class="email">122090510@link.cuhk.edu.cn</a></h4>
+<h4 class="date">2024-05-08</h4>
+
+
+
+<div id="a-comprehensive-r-package-for-data-processing-visualization-variable-selection-with-corresponding-regression-and-vectorized-hypothesis-test" class="section level3">
+<h3>A comprehensive R package for data processing, visualization,
+variable selection with corresponding regression and vectorized
+hypothesis test</h3>
+<p><strong>DataToolBox</strong> is package helps to conduct data
+visualization, data cleaning, outliers handling and distribution
+checking on the data set. It also helps to select regressor variables
+based on forward or backward methods and provides the regression result
+with corresponding response variable and selected regressor. Besides, it
+provide some vectorized hypothesis such as t test and so on for you to
+check. What’s more, this package also has functions to get contingency
+table and sample size needed to achieve a desired error in estimating a
+population proportion with a specified confidence level.</p>
+</div>
+<div id="package-installation" class="section level2">
+<h2>Package installation</h2>
+<p>To install <strong>DataToolBox</strong> package, you can use the
+<code>install.packages()</code> function in R. However, since the
+package is in tar.gz file format, you will need to specify the path to
+the file using the <code>repos=NULL</code> argument. Here is an example
+of how to install it:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;/path/to/DataToolBox_0.9.0.tar.gz&quot;</span>, <span class="at">repos =</span> <span class="cn">NULL</span>, <span class="at">type =</span> <span class="st">&quot;source&quot;</span>)</span></code></pre></div>
+<pre><code>## Installing package into &#39;C:/Users/86183/AppData/Local/Temp/Rtmpiq1DL2/temp_libpath3124b3f36d4&#39;
+## (as &#39;lib&#39; is unspecified)</code></pre>
+<pre><code>## Warning in install.packages(&quot;/path/to/DataToolBox_0.9.0.tar.gz&quot;, repos = NULL,
+## : installation of package &#39;/path/to/DataToolBox_0.9.0.tar.gz&#39; had non-zero exit
+## status</code></pre>
+</div>
+<div id="load-package" class="section level2">
+<h2>Load Package</h2>
+<p>To use <strong>DataToolBox</strong> you first need to load in library
+into your R session using the library() function. Here’s an example:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">library</span>(DataToolBox)</span></code></pre></div>
+</div>
+<div id="load-sample-data-set" class="section level2">
+<h2>Load sample data set</h2>
+<p>The following sample data set includes socio-economic information
+with suicide rates by country in 2011.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;SuicideData&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">head</span>(SuicideData,<span class="dv">100</span>)</span></code></pre></div>
+<pre><code>##       country    sex         age suicides_no population suicides.100k.pop
+## 1   Argentina   male   75+ years         178     674738             26.38
+## 2   Argentina   male 15-24 years         693    3471151             19.96
+## 3   Argentina   male 25-34 years         510    3258804             15.65
+## 4   Argentina   male 55-74 years         416    2788575             14.92
+## 5   Argentina   male 35-54 years         504    4738525             10.64
+## 6   Argentina female 15-24 years         172    3372659              5.10
+## 7   Argentina female 35-54 years         157    4893085              3.21
+## 8   Argentina female 25-34 years         102    3224774              3.16
+## 9   Argentina female 55-74 years          93    3268753              2.85
+## 10  Argentina female   75+ years          30    1260121              2.38
+## 11  Argentina female  5-14 years          29    3472180              0.84
+## 12  Argentina   male  5-14 years          28    3592374              0.78
+## 13    Armenia female   75+ years           6      86643              6.92
+## 14    Armenia   male 35-54 years          23     341199              6.74
+## 15    Armenia   male 55-74 years          11     194982              5.64
+## 16    Armenia   male 25-34 years           8     209914              3.81
+## 17    Armenia   male   75+ years           2      55565              3.60
+## 18    Armenia   male 15-24 years           7     245227              2.85
+## 19    Armenia female 15-24 years           4     259823              1.54
+## 20    Armenia female 55-74 years           3     256541              1.17
+## 21    Armenia female 35-54 years           3     422179              0.71
+## 22    Armenia female 25-34 years           0     244912              0.00
+## 23    Armenia female  5-14 years           0     164004              0.00
+## 24    Armenia   male  5-14 years           0     189377              0.00
+## 25      Aruba   male 55-74 years           3       8940             33.56
+## 26      Aruba   male 35-54 years           3      15388             19.50
+## 27      Aruba female 25-34 years           1       6264             15.96
+## 28      Aruba   male 15-24 years           1       6706             14.91
+## 29      Aruba female 55-74 years           1      10536              9.49
+## 30      Aruba female 15-24 years           0       6272              0.00
+## 31      Aruba female 35-54 years           0      17691              0.00
+## 32      Aruba female  5-14 years           0       7064              0.00
+## 33      Aruba female   75+ years           0       2358              0.00
+## 34      Aruba   male 25-34 years           0       5440              0.00
+## 35      Aruba   male  5-14 years           0       7324              0.00
+## 36      Aruba   male   75+ years           0       1505              0.00
+## 37  Australia   male   75+ years         146     588053             24.83
+## 38  Australia   male 35-54 years         704    3072726             22.91
+## 39  Australia   male 25-34 years         347    1610295             21.55
+## 40  Australia   male 55-74 years         366    2104816             17.39
+## 41  Australia   male 15-24 years         242    1570069             15.41
+## 42  Australia female 35-54 years         230    3124328              7.36
+## 43  Australia female 15-24 years          93    1495053              6.22
+## 44  Australia female 55-74 years         118    2139108              5.52
+## 45  Australia female   75+ years          45     817927              5.50
+## 46  Australia female 25-34 years          85    1584036              5.37
+## 47  Australia female  5-14 years           9    1351751              0.67
+## 48  Australia   male  5-14 years           7    1423748              0.49
+## 49    Austria   male   75+ years         196     245207             79.93
+## 50    Austria   male 55-74 years         276     855700             32.25
+## 51    Austria   male 35-54 years         336    1292255             26.00
+## 52    Austria   male 25-34 years          97     546027             17.76
+## 53    Austria female   75+ years          58     431128             13.45
+## 54    Austria   male 15-24 years          67     518095             12.93
+## 55    Austria female 55-74 years         113     942311             11.99
+## 56    Austria female 35-54 years          95    1288452              7.37
+## 57    Austria female 15-24 years          23     498172              4.62
+## 58    Austria female 25-34 years          23     542031              4.24
+## 59    Austria   male  5-14 years           3     428198              0.70
+## 60    Austria female  5-14 years           1     407570              0.25
+## 61    Bahamas   male 55-74 years           1      22178              4.51
+## 62    Bahamas female 25-34 years           1      29138              3.43
+## 63    Bahamas   male 15-24 years           1      32343              3.09
+## 64    Bahamas   male 35-54 years           1      50932              1.96
+## 65    Bahamas female 15-24 years           0      32120              0.00
+## 66    Bahamas female 35-54 years           0      53821              0.00
+## 67    Bahamas female  5-14 years           0      26108              0.00
+## 68    Bahamas female 55-74 years           0      26262              0.00
+## 69    Bahamas female   75+ years           0       6106              0.00
+## 70    Bahamas   male 25-34 years           0      28997              0.00
+## 71    Bahamas   male  5-14 years           0      27054              0.00
+## 72    Bahamas   male   75+ years           0       3324              0.00
+## 73    Bahrain   male 15-24 years           3     101695              2.95
+## 74    Bahrain   male 55-74 years           1      43883              2.28
+## 75    Bahrain female 25-34 years           2      98138              2.04
+## 76    Bahrain   male 25-34 years           4     220691              1.81
+## 77    Bahrain   male 35-54 years           4     242955              1.65
+## 78    Bahrain female 35-54 years           2     123582              1.62
+## 79    Bahrain female 15-24 years           1      75788              1.32
+## 80    Bahrain female  5-14 years           1      77270              1.29
+## 81    Bahrain female 55-74 years           0      29140              0.00
+## 82    Bahrain female   75+ years           0       4742              0.00
+## 83    Bahrain   male  5-14 years           0      81209              0.00
+## 84    Bahrain   male   75+ years           0       4369              0.00
+## 85   Barbados female 15-24 years           0      18660              0.00
+## 86   Barbados female 25-34 years           0      19511              0.00
+## 87   Barbados female 35-54 years           0      43221              0.00
+## 88   Barbados female  5-14 years           0      18501              0.00
+## 89   Barbados female 55-74 years           0      27506              0.00
+## 90   Barbados female   75+ years           0      10011              0.00
+## 91   Barbados   male 15-24 years           0      18668              0.00
+## 92   Barbados   male 25-34 years           0      18675              0.00
+## 93   Barbados   male 35-54 years           0      39290              0.00
+## 94   Barbados   male  5-14 years           0      19431              0.00
+## 95   Barbados   male 55-74 years           0      23496              0.00
+## 96   Barbados   male   75+ years           0       6233              0.00
+## 97    Belarus   male   75+ years         112     161762             69.24
+## 98    Belarus   male 55-74 years         415     755610             54.92
+## 99    Belarus   male 35-54 years         730    1342175             54.39
+## 100   Belarus   male 25-34 years         340     736247             46.18
+##     HDI.for.year      gdp_for_year gdp_per_capita   generation
+## 1          0.818   530,163,281,575          13946       Silent
+## 2          0.818   530,163,281,575          13946   Millenials
+## 3          0.818   530,163,281,575          13946   Millenials
+## 4          0.818   530,163,281,575          13946      Boomers
+## 5          0.818   530,163,281,575          13946 Generation X
+## 6          0.818   530,163,281,575          13946   Millenials
+## 7          0.818   530,163,281,575          13946 Generation X
+## 8          0.818   530,163,281,575          13946   Millenials
+## 9          0.818   530,163,281,575          13946      Boomers
+## 10         0.818   530,163,281,575          13946       Silent
+## 11         0.818   530,163,281,575          13946 Generation Z
+## 12         0.818   530,163,281,575          13946 Generation Z
+## 13         0.723    10,142,111,334           3798       Silent
+## 14         0.723    10,142,111,334           3798 Generation X
+## 15         0.723    10,142,111,334           3798      Boomers
+## 16         0.723    10,142,111,334           3798   Millenials
+## 17         0.723    10,142,111,334           3798       Silent
+## 18         0.723    10,142,111,334           3798   Millenials
+## 19         0.723    10,142,111,334           3798   Millenials
+## 20         0.723    10,142,111,334           3798      Boomers
+## 21         0.723    10,142,111,334           3798 Generation X
+## 22         0.723    10,142,111,334           3798   Millenials
+## 23         0.723    10,142,111,334           3798 Generation Z
+## 24         0.723    10,142,111,334           3798 Generation Z
+## 25            NA     2,584,463,687          27066      Boomers
+## 26            NA     2,584,463,687          27066 Generation X
+## 27            NA     2,584,463,687          27066   Millenials
+## 28            NA     2,584,463,687          27066   Millenials
+## 29            NA     2,584,463,687          27066      Boomers
+## 30            NA     2,584,463,687          27066   Millenials
+## 31            NA     2,584,463,687          27066 Generation X
+## 32            NA     2,584,463,687          27066 Generation Z
+## 33            NA     2,584,463,687          27066       Silent
+## 34            NA     2,584,463,687          27066   Millenials
+## 35            NA     2,584,463,687          27066 Generation Z
+## 36            NA     2,584,463,687          27066       Silent
+## 37         0.930 1,394,280,784,778          66770       Silent
+## 38         0.930 1,394,280,784,778          66770 Generation X
+## 39         0.930 1,394,280,784,778          66770   Millenials
+## 40         0.930 1,394,280,784,778          66770      Boomers
+## 41         0.930 1,394,280,784,778          66770   Millenials
+## 42         0.930 1,394,280,784,778          66770 Generation X
+## 43         0.930 1,394,280,784,778          66770   Millenials
+## 44         0.930 1,394,280,784,778          66770      Boomers
+## 45         0.930 1,394,280,784,778          66770       Silent
+## 46         0.930 1,394,280,784,778          66770   Millenials
+## 47         0.930 1,394,280,784,778          66770 Generation Z
+## 48         0.930 1,394,280,784,778          66770 Generation Z
+## 49         0.881   431,120,310,089          53923       Silent
+## 50         0.881   431,120,310,089          53923      Boomers
+## 51         0.881   431,120,310,089          53923 Generation X
+## 52         0.881   431,120,310,089          53923   Millenials
+## 53         0.881   431,120,310,089          53923       Silent
+## 54         0.881   431,120,310,089          53923   Millenials
+## 55         0.881   431,120,310,089          53923      Boomers
+## 56         0.881   431,120,310,089          53923 Generation X
+## 57         0.881   431,120,310,089          53923   Millenials
+## 58         0.881   431,120,310,089          53923   Millenials
+## 59         0.881   431,120,310,089          53923 Generation Z
+## 60         0.881   431,120,310,089          53923 Generation Z
+## 61         0.778    10,070,450,000          29761      Boomers
+## 62         0.778    10,070,450,000          29761   Millenials
+## 63         0.778    10,070,450,000          29761   Millenials
+## 64         0.778    10,070,450,000          29761 Generation X
+## 65         0.778    10,070,450,000          29761   Millenials
+## 66         0.778    10,070,450,000          29761 Generation X
+## 67         0.778    10,070,450,000          29761 Generation Z
+## 68         0.778    10,070,450,000          29761      Boomers
+## 69         0.778    10,070,450,000          29761       Silent
+## 70         0.778    10,070,450,000          29761   Millenials
+## 71         0.778    10,070,450,000          29761 Generation Z
+## 72         0.778    10,070,450,000          29761       Silent
+## 73         0.817    28,776,595,745          26078   Millenials
+## 74         0.817    28,776,595,745          26078      Boomers
+## 75         0.817    28,776,595,745          26078   Millenials
+## 76         0.817    28,776,595,745          26078   Millenials
+## 77         0.817    28,776,595,745          26078 Generation X
+## 78         0.817    28,776,595,745          26078 Generation X
+## 79         0.817    28,776,595,745          26078   Millenials
+## 80         0.817    28,776,595,745          26078 Generation Z
+## 81         0.817    28,776,595,745          26078      Boomers
+## 82         0.817    28,776,595,745          26078       Silent
+## 83         0.817    28,776,595,745          26078 Generation Z
+## 84         0.817    28,776,595,745          26078       Silent
+## 85         0.786     4,660,900,000          17708   Millenials
+## 86         0.786     4,660,900,000          17708   Millenials
+## 87         0.786     4,660,900,000          17708 Generation X
+## 88         0.786     4,660,900,000          17708 Generation Z
+## 89         0.786     4,660,900,000          17708      Boomers
+## 90         0.786     4,660,900,000          17708       Silent
+## 91         0.786     4,660,900,000          17708   Millenials
+## 92         0.786     4,660,900,000          17708   Millenials
+## 93         0.786     4,660,900,000          17708 Generation X
+## 94         0.786     4,660,900,000          17708 Generation Z
+## 95         0.786     4,660,900,000          17708      Boomers
+## 96         0.786     4,660,900,000          17708       Silent
+## 97         0.793    61,757,788,945           6902       Silent
+## 98         0.793    61,757,788,945           6902      Boomers
+## 99         0.793    61,757,788,945           6902 Generation X
+## 100        0.793    61,757,788,945           6902   Millenials</code></pre>
+</div>
+<div id="key-features-of-numeric-column-visualization" class="section level2">
+<h2>1. Key Features of Numeric Column Visualization</h2>
+<p>The function <code>plot_data_analysis</code> in
+<strong>DataToolBox</strong> package is designed to provide a
+comprehensive visualization of numeric columns within a dataset. It
+facilitates both univariate and bivariate analysis by generating
+histograms for each numeric column and pairwise plots for exploring
+relationships between them. The function is flexible, allowing
+customization of plot colors and the option to toggle the display of
+histograms or pair plots based on the user’s needs. Here is an example
+of using <code>plot_data_analysis</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">plot_data_analysis</span>(SuicideData, <span class="at">hist =</span> <span class="cn">TRUE</span>, <span class="at">pair =</span> <span class="cn">TRUE</span>, <span class="at">hist_col =</span> <span class="st">&quot;lightblue&quot;</span>, <span class="at">pair_col =</span> <span class="st">&quot;darkgreen&quot;</span>)</span></code></pre></div>
+</div>
+<div id="check-distribution" class="section level2">
+<h2>2. Check Distribution</h2>
+<p>After seeing the plot of each column. We may want to know whether it
+follows some specific distribution. We can use
+<code>check_distribution</code> function to solve it. Here is some
+examples:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">check_distribution</span>(SuicideData<span class="sc">$</span>HDI.for.year, <span class="st">&quot;uniform&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;By Kolmogorov-Smirnov test, your data does NOT follow uniform distribution.&quot;</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">check_distribution</span>(SuicideData<span class="sc">$</span>gdp_per_capita...., <span class="st">&quot;exponential&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;This data cannot be tested because it is not numeric. Please try others.&quot;</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">check_distribution</span>(SuicideData<span class="sc">$</span>suicides<span class="fl">.100</span>k.pop, <span class="st">&quot;normal&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;By Kolmogorov-Smirnov test, your data does NOT follow normal distribution.&quot;</code></pre>
+</div>
+<div id="data-cleaning" class="section level2">
+<h2>3. Data Cleaning</h2>
+<p>Before proceeding with further operations on the provided data set,
+it’s essential to perform data cleaning to ensure its integrity and
+quality. The package offers a comprehensive set of functions for data
+cleaning, allowing users to remove or rectify potentially erroneous
+data.</p>
+<div id="introduction-to-data-cleaning" class="section level3">
+<h3>Introduction to Data Cleaning</h3>
+<p>Data cleaning is a crucial step in the data pre-processing pipeline,
+involving the identification and handling of missing, duplicate, or
+inconsistent data points. By addressing these issues, we can improve the
+accuracy and reliability of subsequent analyses and modeling tasks.</p>
+</div>
+<div id="the-data_cleaning-function" class="section level3">
+<h3>The data_cleaning Function</h3>
+<p>The data_cleaning function is designed to streamline the data
+cleaning process. It offers several operations to handle common data
+quality issues effectively.</p>
+</div>
+<div id="available-operations" class="section level3">
+<h3>Available Operations</h3>
+<p>remove_missing: By setting <code>remove_missing = TRUE</code>, the
+function will remove rows containing missing (NA) values from the data
+set. This ensures that analyses are performed on complete data, reducing
+the risk of biased results.</p>
+<p>remove_repeating: Setting <code>remove_repeating = TRUE</code>
+instructs the function to eliminate duplicate rows from the data set.
+This operation helps maintain data integrity by removing redundant
+observations.</p>
+<p>fill_NA: When <code>fill_NA = TRUE</code>, the function replaces NA
+values in a column with the mean value of that column from the data set.
+This imputation strategy helps preserve the overall distribution of the
+data while addressing missing values.</p>
+<p>get_dummies: Setting <code>get_dummies = TRUE</code> enables the
+creation of dummy variables in the data set. Dummy variables are binary
+indicators representing categorical variables, facilitating the
+inclusion of categorical data in statistical analyses.</p>
+<p>Example Usage</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>clean_SuicideData <span class="ot">&lt;-</span> <span class="fu">data_cleaning</span>(SuicideData, <span class="cn">TRUE</span>, <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>In this example, we apply all available data cleaning operations to
+<code>SuicideData</code>, and the cleaned data is stored as
+<code>clean_SuicideData</code>.</p>
+</div>
+</div>
+<div id="outliers-handling" class="section level2">
+<h2>4. Outliers Handling</h2>
+<p>After performing preliminary data cleaning, you can utilize the
+outliers_handling function from this package to identify and manage
+outliers within your data set according to your specified criteria. This
+function equips users with a set of functionalities tailored to outlier
+detection and treatment:</p>
+<div id="key-features" class="section level3">
+<h3>Key Features</h3>
+<p><strong>Outlier Detection and Removal</strong>: By inputting the
+dataset and specifying the desired threshold for outlier filtering, the
+function identifies and eliminates outliers, providing a refined data
+set that is more suitable for subsequent analyses. This ensures that
+statistical analyses and modeling are conducted on data free from the
+influence of outliers, thereby improving the accuracy and reliability of
+results.</p>
+<p><strong>Visualization of Original Data</strong>: The function
+generates a line plot illustrating the original data distribution before
+outlier processing. This visualization allows users to gain insights
+into the distribution and variability of the data, serving as a
+reference point for understanding the impact of outliers on the data
+set.</p>
+<p><strong>Comparison Visualization</strong>: Additionally, the function
+produces a line plot showcasing the data after outlier processing. This
+visual representation enables users to compare the distribution and
+patterns of the data before and after outlier removal, facilitating the
+assessment of the effectiveness of the outlier handling procedure.</p>
+<p>Example Usage</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>clean_SuicideData <span class="ot">&lt;-</span> <span class="fu">Outliers_handling</span>(SuicideData, <span class="at">threshold =</span> <span class="fl">0.5</span>, <span class="st">&quot;suicides_no&quot;</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="forward-and-backward-variable-selection" class="section level2">
+<h2>5. Forward and Backward Variable selection</h2>
+<p>This can help you to get the most n influential variables
+corresponding to your response variable.</p>
+<p>In this example step, suppose we are interested in the number of
+suicides people in 100000 people. We want to focus on the 4 most
+important regressor variables and want to see the regression result. We
+do variables selection based on forward method first by
+forward_selection_regression() function.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">forward_selection_regression</span>(clean_SuicideData, <span class="st">&quot;suicides.100k.pop&quot;</span>, <span class="dv">4</span>, <span class="at">summary =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;suicides_no&quot;    &quot;population&quot;     &quot;HDI.for.year&quot;   &quot;gdp_per_capita&quot;</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = final_formula, data = data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -50.054  -8.781  -3.815   3.614  90.698 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    -1.597e+01  6.209e+00  -2.573 0.010238 *  
+## suicides_no     1.025e-02  9.363e-04  10.949  &lt; 2e-16 ***
+## population     -1.288e-06  1.582e-07  -8.144 1.17e-15 ***
+## HDI.for.year    3.704e+01  8.510e+00   4.353 1.49e-05 ***
+## gdp_per_capita -9.728e-05  2.797e-05  -3.478 0.000527 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 14.06 on 967 degrees of freedom
+## Multiple R-squared:  0.1356, Adjusted R-squared:  0.132 
+## F-statistic: 37.93 on 4 and 967 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>We may also want to focus on the 4 most important regressor variables
+and want to see the regression result based on backward method. We can
+do this by backward_selection_regression() function instead of
+forward_selection_regression()</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">backward_selection_regression</span>(clean_SuicideData, <span class="st">&quot;suicides.100k.pop&quot;</span>, <span class="dv">4</span>, <span class="at">summary =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;suicides_no&quot;    &quot;population&quot;     &quot;HDI.for.year&quot;   &quot;gdp_per_capita&quot;</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = final_formula, data = data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -50.054  -8.781  -3.815   3.614  90.698 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    -1.597e+01  6.209e+00  -2.573 0.010238 *  
+## suicides_no     1.025e-02  9.363e-04  10.949  &lt; 2e-16 ***
+## population     -1.288e-06  1.582e-07  -8.144 1.17e-15 ***
+## HDI.for.year    3.704e+01  8.510e+00   4.353 1.49e-05 ***
+## gdp_per_capita -9.728e-05  2.797e-05  -3.478 0.000527 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 14.06 on 967 degrees of freedom
+## Multiple R-squared:  0.1356, Adjusted R-squared:  0.132 
+## F-statistic: 37.93 on 4 and 967 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div id="hypothesis-testing-tools" class="section level2">
+<h2>6. Hypothesis Testing Tools</h2>
+<p>The <code>calculate_contingency_table</code> function is a robust
+tool for performing a chi-square test of independence from a contingency
+table, which is crucial in understanding the relationship between two
+categorical variables.</p>
+<p>When given a matrix of observed counts where each element represents
+the count of observations for a combination of categories from two
+variables, this function calculates the chi-square statistic, degrees of
+freedom, and p-value. This aids in determining whether there is a
+significant association between the two variables. By setting a
+significance level (<code>alpha</code>), users can customize the rigor
+of the hypothesis test, making it a flexible tool for various research
+contexts.</p>
+<p>For example, if a marketer wants to determine whether there is an
+association between gender (male/female) and number of suicides, this
+function can provide a clear statistical answer. Here is an example of
+using <code>calculate_contingency_table</code>:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>SuicideData_Arg <span class="ot">=</span> SuicideData <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;Argentina&quot;</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>SuicideData_Arg <span class="ot">=</span> SuicideData_Arg <span class="sc">%&gt;%</span></span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>  <span class="fu">select</span>(sex, age, suicides_no) <span class="sc">%&gt;%</span></span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>  <span class="fu">spread</span>(age, suicides_no)</span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a>SuicideData_Arg_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(SuicideData_Arg)</span>
+<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a>SuicideData_Arg_mat <span class="ot">=</span> SuicideData_Arg_mat[, <span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a>SuicideData_Arg_mat <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">as.numeric</span>(SuicideData_Arg_mat), <span class="at">nrow =</span> <span class="fu">nrow</span>(SuicideData_Arg_mat))</span>
+<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a><span class="fu">rownames</span>(SuicideData_Arg_mat) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;female&quot;</span>, <span class="st">&quot;male&quot;</span>)</span>
+<span id="cb26-12"><a href="#cb26-12" tabindex="-1"></a><span class="fu">colnames</span>(SuicideData_Arg_mat) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;15-24 years&quot;</span>, <span class="st">&quot;25-34 years&quot;</span>, <span class="st">&quot;35-54 years&quot;</span>,</span>
+<span id="cb26-13"><a href="#cb26-13" tabindex="-1"></a>                                 <span class="st">&quot;5-14 years&quot;</span>, <span class="st">&quot;55-74 years&quot;</span>, <span class="st">&quot;75+ years&quot;</span>)</span>
+<span id="cb26-14"><a href="#cb26-14" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" tabindex="-1"></a><span class="co">#Assume that H0: The age of suicides_no in Argentina has no difference from man to women.</span></span>
+<span id="cb26-16"><a href="#cb26-16" tabindex="-1"></a><span class="fu">calculate_contingency_table</span>(SuicideData_Arg_mat, <span class="at">alpha =</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<pre><code>## $chi_square_stat
+## [1] 48.99311
+## 
+## $p_val
+## [1] 2.226462e-09
+## 
+## $decision
+## [1] &quot;Reject the null hypothesis.&quot;</code></pre>
+<p>The <code>calculate_sample_size</code> function addresses a common
+challenge in statistics: determining the necessary sample size to
+estimate a population proportion within a desired error margin at a
+specified confidence level.</p>
+<p>By inputting an estimated proportion (<code>p_hat</code>), the
+maximum margin of error (<code>desired_error</code>), and the confidence
+level, the function computes the minimum number of samples needed. This
+is particularly valuable in planning studies or surveys where precision
+in proportion estimates is crucial.</p>
+<p>For instance, a public health official could use this function to
+determine how many individuals should be surveyed to estimate the
+prevalence of a health behavior within a 5% error margin with 95%
+confidence. Here is an example of
+<code>calculate_sample_size</code>:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="co">#Suppose you want to estimate the proportion of suicides in a specific demographic group (e.g., females aged 15-24) within a certain country. You would first need to calculate an initial estimate of the proportion of suicides in this group (p_hat), which could be based on previous data or preliminary analysis.</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>SuicideData_Arg <span class="ot">=</span> SuicideData <span class="sc">%&gt;%</span></span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;Argentina&quot;</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>p_hat <span class="ot">=</span> <span class="fu">sum</span>(SuicideData_Arg<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">&quot;female&quot;</span> <span class="sc">&amp;</span> SuicideData_Arg<span class="sc">$</span>age <span class="sc">==</span> <span class="st">&quot;15-24 years&quot;</span>)<span class="sc">/</span><span class="fu">sum</span>(SuicideData_Arg<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">&quot;female&quot;</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a><span class="fu">calculate_sample_size</span>(p_hat, <span class="at">desired_error =</span> <span class="fl">0.05</span>, <span class="at">confidence_level =</span> <span class="fl">0.95</span>) <span class="co"># Should be 214</span></span></code></pre></div>
+<pre><code>## [1] 214</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="co">#So we can know that at least 214 individuals should be surveyed to estimated within a 5% error margin with 95% confidence.</span></span></code></pre></div>
+<p>The <code>vectorization_test</code> function is designed for
+efficient comparative statistical testing across corresponding columns
+of two data frames using either t-tests or chi-square tests. This
+vectorized approach allows users to automatically apply the specified
+test to each pair of columns from the first and second data frame,
+respectively.</p>
+<p>The results include the test statistic, degrees of freedom, and
+p-value for each test performed, providing a comprehensive overview of
+the statistical differences or associations across multiple
+variables.</p>
+<p>This function is ideal for scenarios where researchers or analysts
+need to conduct multiple comparisons quickly, such as comparing pre-test
+and post-test data across several groups or variables in a clinical
+trial.</p>
+<p>Here is an example of <code>vectorization_test</code>:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>SuicideData_Arg <span class="ot">=</span> SuicideData <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;Argentina&quot;</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a>SuicideData_Arm <span class="ot">=</span> SuicideData <span class="sc">%&gt;%</span></span>
+<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">&quot;Armenia&quot;</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a><span class="fu">vectorization_t_test</span>(SuicideData_Arg, SuicideData_Arm)</span></code></pre></div>
+<pre><code>## Some column has constant data. Test skipped.
+## Some column has constant data. Test skipped.</code></pre>
+<pre><code>## $suicides_no
+## $suicides_no$statistic
+##        t 
+## 3.611882 
+## 
+## $suicides_no$df
+##       df 
+## 11.01792 
+## 
+## $suicides_no$p_value
+## [1] 0.004073629
+## 
+## 
+## $population
+## $population$statistic
+##       t 
+## 8.46542 
+## 
+## $population$df
+##       df 
+## 11.15149 
+## 
+## $population$p_value
+## [1] 3.465129e-06
+## 
+## 
+## $suicides.100k.pop
+## $suicides.100k.pop$statistic
+##        t 
+## 2.356893 
+## 
+## $suicides.100k.pop$df
+##       df 
+## 13.02052 
+## 
+## $suicides.100k.pop$p_value
+## [1] 0.03474843
+## 
+## 
+## $HDI.for.year
+## [1] NA
+## 
+## $gdp_per_capita
+## [1] NA</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="co">#The results implies that </span></span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a><span class="co">#suicides_no:</span></span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a><span class="co">#The t-test statistic is 3.611882.</span></span>
+<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a><span class="co">#With 11.01792 degrees of freedom, this yields a p-value of 0.004073629.</span></span>
+<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a><span class="co">#The p-value is less than 0.05, suggesting that there is a statistically significant difference in the number of suicides between the two datasets.</span></span>
+<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a><span class="co">#population:</span></span>
+<span id="cb34-7"><a href="#cb34-7" tabindex="-1"></a><span class="co">#  The t-test statistic is 8.46542.</span></span>
+<span id="cb34-8"><a href="#cb34-8" tabindex="-1"></a><span class="co">#With 11.15149 degrees of freedom, the p-value is very small (3.465129e-06).</span></span>
+<span id="cb34-9"><a href="#cb34-9" tabindex="-1"></a><span class="co">#This extremely low p-value indicates a highly significant difference in population between the two datasets.</span></span>
+<span id="cb34-10"><a href="#cb34-10" tabindex="-1"></a><span class="co">#suicides.100k.pop:</span></span>
+<span id="cb34-11"><a href="#cb34-11" tabindex="-1"></a><span class="co">#  The t-test statistic is 2.356893.</span></span>
+<span id="cb34-12"><a href="#cb34-12" tabindex="-1"></a><span class="co">#With 13.02052 degrees of freedom, the p-value is 0.03474843.</span></span>
+<span id="cb34-13"><a href="#cb34-13" tabindex="-1"></a><span class="co">#The p-value is less than 0.05, indicating a statistically significant difference in suicide rates per 100k population between the datasets.</span></span></code></pre></div>
+</div>
+<div id="the-following-are-the-learned-points-from-this-course." class="section level2">
+<h2>The following are the learned points from this course.</h2>
+<div id="apply-family" class="section level3">
+<h3>1. Apply Family</h3>
+<p>R offers a family of apply functions, which allows us to apply a
+function across different chunks of data. The apply function helps to
+increase the speed, save the memory, and also make the code more
+readable.</p>
+<p>In this project, we use several apply family, such as:</p>
+<pre><code>apply(): Returns a vector or array or list of values obtained by applying a function to margins of an array or matrix.
+
+sapply(): A user-friendly version and wrapper of lapply, which returns a list of the same length as X, each element of which is the result of applying FUN to the corresponding element of X.</code></pre>
+<p>Example of implementation in this package:</p>
+<p>In <code>calculate_contingency_table</code> function, we use
+<code>apply()</code> to calculate the row sum and column sum of the
+contingency table by apply the <code>sum()</code> function to the data
+<code>observed</code> and set the margin to be 1 as row and 2 as
+column.</p>
+<p>And in <code>vectorization_t_test</code> function, we use
+<code>sapply()</code> to pick up the numeric columns of a data frame,
+where we apply the <code>is.numeric()</code> function on the data
+frame.</p>
+</div>
+<div id="basic-plotting" class="section level3">
+<h3>2. Basic Plotting</h3>
+<p>R provides a simple yet powerful set of functions for creating
+various types of plots directly from your data.</p>
+<p>In this project, we use the basic plotting functions including:</p>
+<pre><code>hist(): Computes a histogram of the given data values.
+
+par(): Used to set or query graphical parameters.
+
+pairs(): Produce a matrix of scatterplots.</code></pre>
+<p>Example of implementation in this package:</p>
+<p>In <code>plot_data_analysis</code> function, we use
+<code>hist()</code> to plot the histograms of all numeric columns to
+generally go through the given data set. Then use the <code>par()</code>
+function to set the appropriate layout. And finally use the
+<code>pairs()</code> to plot a lot of scatter plots to find whether
+there is a relationship between two variables.</p>
+</div>
+<div id="logical-expression" class="section level3">
+<h3>3. Logical Expression</h3>
+<p>Logical expressions help the program to decide whether to execute a
+command. Example of implementation in this package: In
+<code>Data_cleaning</code>, the user is required to input TRUE or FALSE
+to decide whether to remove missing values, remove repeated values, fill
+the NA values or create dummies for the given data.</p>
+</div>
+<div id="list" class="section level3">
+<h3>4. List</h3>
+<p>List can help the store information and allows easy access to the
+data. Example of implementation in this package: In
+<code>Outliers_handling</code>, a list is used when dealing with the
+plotting of the original or processed data. As there are more than one
+columns needed to be plotted, a list can easily store these graphs.</p>
+</div>
+<div id="ggplot2" class="section level3">
+<h3>5. ggplot2</h3>
+<p><code>ggplot2</code> provides an intuitive and consistent syntax,
+making it effortless to create beautiful plots. It supports multiple
+types of plots, including scatter plots, histograms, box plots, etc.,
+enabling to showcase different characteristics of data. Example of
+implementation in this package: In <code>Outliers_handling</code>,
+<code>ggplot2</code> is used to plot the data before the outliers
+handling procedure, and is used again to plot the processed data. In
+this function, <code>ggplot2</code> is used to draw scatter plots.</p>
+</div>
+<div id="iteration" class="section level3">
+<h3>6. Iteration</h3>
+<p>Iterations in programming are repetitive executions of a block of
+code until a specific condition is met or a certain number of
+repetitions is reached. It plays a crucial role in automating tasks,
+especially when dealing with datasets. Example of implementation in this
+package: In <code>forward_selection_regression</code> and
+<code>backward_selection_regression</code>, in order to get the most n
+(expected number of regressors) influential variables corresponding to
+the response variable, iteration <code>for</code> and <code>while</code>
+are used to go through each column repeatedly and select variables.</p>
+</div>
+<div id="control-flow-if-else-etc" class="section level3">
+<h3>7. Control flow (if, else, etc)</h3>
+<p>By using control flow, we can decide program whether or not to
+execute some commands. Example of implementation in this package: In
+<code>check_distribution</code>, control flows <code>if</code> and
+<code>else</code> are used to enable users to choose distribution that
+they want to check. Also, in <code>forward_selection_regression</code>
+and <code>backward_selection_regression</code>, control flows
+<code>if</code> are used to stop continuing executing following codes
+and to warn users when the input has some problems.</p>
+</div>
+<div id="fitting-models-to-datalm-and-utility-functions" class="section level3">
+<h3>8. Fitting Models to Data(lm) and Utility functions</h3>
+<p>The fitting of models to data serves the purpose of establishing
+relationships between variables in a dataset. And utility functions
+enable users to gain insights, make predictions, and assess model
+performance effectively. Example of implementation in this package: In
+<code>forward_selection_regression</code> and
+<code>backward_selection_regression</code>, <code>lm</code> was used to
+fitting models to data and <code>summary</code> shows the basic and
+important information of the fitted model.</p>
+</div>
+<div id="indexing" class="section level3">
+<h3>9. Indexing</h3>
+<p>There are 3 ways to index a vector, matrix, data frame, or list in R.
+In this project, we use the indexing using explicit integer indices (or
+negative integers). Example of implementation in this package: In
+<code>forward_selection_regression</code> and
+<code>backward_selection_regression</code>, we use negative index to
+exclude the regressors have been selected from the regressor candidates
+set.</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

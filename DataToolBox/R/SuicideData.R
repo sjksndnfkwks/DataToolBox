@@ -1,0 +1,20 @@
+#' @title SuicideData
+#' @description A dataset containing socio-economic information with suicide rates by country in 2011.
+#' @format A data frame with 1032 rows and 10 columns:
+#' \describe{
+#'   \item{country}{The nationality of suiciders}
+#'   \item{sex}{sex of suiciders}
+#'   \item{age}{age of of suiciders}
+#'   \item{suicides_no}{the number of suiciders}
+#'   \item{population}{population of the country}
+#'   \item{suicides.100k.pop}{the number of suiciders per 100,000 people}
+#'   \item{HDI.for.year}{The Human Development Index in 2011}
+#'   \item{gdp_for_year}{The GDP of the country in 2011}
+#'   \item{gdp_per_capita}{The GDP per capita of the country in 2011}
+#'   \item{generation}{The generation of suiciders}
+#' }
+#' @source United Nations, World Health Organization and Szamil
+#' @references United Nations Development Program. (2018). Human development index (HDI). Retrieved from http://hdr.undp.org/en/indicators/137506
+#' @references World Health Organization. (2018). Suicide prevention. Retrieved from http://www.who.int/mental_health/suicide-prevention/en/
+#' @references Szamil(2017). Suicide in the Twenty-First Century [dataset]. Retrieved from https://www.kaggle.com/szamil/suicide-in-the-twenty-first-century/notebook
+"SuicideData"

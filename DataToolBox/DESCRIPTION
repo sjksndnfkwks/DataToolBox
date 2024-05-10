@@ -1,0 +1,32 @@
+Package: DataToolBox
+Type: Package
+Title: A comprehensive R package for data processing, visualization, variable 
+    selection with corresponding regression and vectorized hypothesis test
+    and visualization
+Version: 0.9.0
+Author: Zhengyi Zhao <122090791@link.cuhk.edu.cn>, 
+    Shengkai Jiao <122090227@link.cuhk.edu.cn>, 
+    Sicheng Wan <122090510@link.cuhk.edu.cn>
+Maintainer: Zhengyi Zhao <122090791@link.cuhk.edu.cn>
+Description: This package helps to conduct data visualization, data cleaning, 
+    outliers handling and distribution checking on the data set. It also helps 
+    to select regressor variables based on forward or backward methods and 
+    provides the regression result with corresponding response variable and 
+    selected regressor. Besides, it provides some vectorized hypothesis such as 
+    t-test and so on for you to check. What's more, this package also has 
+    functions to get contingency table and sample size needed to achieve a 
+    desired error in estimating a population proportion with a specified 
+    confidence level.
+License: GPL (>=3)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.1
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Imports: ggplot2, dplyr, gridExtra
+Depends: R (>= 3.5.0)
+NeedsCompilation: no
+Config/build/clean-inst-doc: FALSE
