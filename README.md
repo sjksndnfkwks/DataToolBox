@@ -7,6 +7,6 @@ vectorization_t_test, calculate_contingency_table, data_cleaning
 
 The final project of STA3005
 Author:
-Y2 Zhao Zhengyi from CUHKSZ
-Y2 Jiao Shengkai from CUHKSZ
+Y2 Zhao Zhengyi from CUHKSZ,
+Y2 Jiao Shengkai from CUHKSZ,
 Y2 Wan Sicheng from CUHKSZ
