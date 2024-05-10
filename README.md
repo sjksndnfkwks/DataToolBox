@@ -30,4 +30,4 @@ devtools::check()
 
 and finally which is also the most exciting command:
 
-#devtools::build()
+# devtools::build()
